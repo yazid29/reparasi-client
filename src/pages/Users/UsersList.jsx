@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useGetAllUsersQuery } from "../../api/usersApiSlice";
 import Header from "../../components/Header";
+import { CreateUserDrawer } from "./CreateUserDrawer";
 import User from "./User";
 
 export const UsersList = () => {
@@ -37,6 +38,7 @@ export const UsersList = () => {
               <p>Mengelola akses dan data karyawan</p>
             </div>
             {/* Sebuah Drawer create User */}
+            <CreateUserDrawer/>
           </div>
 
           <div className="overflow-hidden bg-white rounded-lg shadow-sm">
