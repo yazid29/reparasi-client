@@ -69,6 +69,7 @@ const User = ({ userId, buttonRef, onStatusChange }) => {
       </td>
       <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
         {/* Edit User Drawer */}
+        
       </td>
     </tr>
   );

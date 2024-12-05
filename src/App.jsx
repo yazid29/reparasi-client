@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Landing from "./components/Landing";
 import { UsersList } from "./pages/Users/UsersList";
 import { TicketsList } from "./pages/Tickets/TicketsList";
+import Loginpage from "./pages/LoginPage";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route index element={<TicketsList />} />
           </Route>
         </Route>
+        <Route path="/login" element={<Loginpage />}></Route>
       </Route>
     </Routes>
   );
