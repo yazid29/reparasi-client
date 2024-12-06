@@ -1,37 +1,38 @@
-import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+/* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useDispatch } from "react-redux";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../api/authApiSlice";
 import { setCredentials } from "../../api/authSlice";
 import { z } from "zod";
 import { toast } from "sonner";
 export const Login = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    // eslint-disable-next-line no-unused-vars
     const location = useLocation();
+    const dispatch = useDispatch();
 
     const LoginSchema = z.object({
-        username: z.string().min(8, "Minimum 8 Karakter"),
-        password: z.string().min(5, "Minimum 5 Karakter"),
+        username: z.string().min(1, "Username is required"),
+        password: z.string().min(1, "Password is required"),
     })
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-        // eslint-disable-next-line no-unused-vars
-        reset,
-    } = useForm({ resolver: zodResolver(LoginSchema) });
+    } = useForm({ 
+        resolver: 
+        zodResolver(LoginSchema),
+    });
 
-    // eslint-disable-next-line no-unused-vars
     const [login, { isLoading, isSuccess }] = useLoginMutation();
     const onSubmit = async (payload) => {
         try {
             const { accessToken } = await login(payload).unwrap();
             toast.info("You are logged in");
+            localStorage.setItem("userName", payload.username);
             dispatch(setCredentials({ accessToken }));
-            navigate("/app");
+            navigate("/app/dashboard");
         } catch (error) {
             if (!error.status) {
                 console.error("No server response");
@@ -70,14 +71,13 @@ export const Login = () => {
                     <div>
                         <button
                             type="submit"
+                            className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                             disabled={isSubmitting}
-                            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Login</button>
+                        >
+                            {isSubmitting ? "Signing in..." : "Sign in"}
+                        </button>
                     </div>
                 </form>
-
-                <div className="mt-4 text-center">
-                    <a href="app/users" className="text-blue-500 text-sm hover:underline">By Pass Login... </a>
-                </div>
             </div>
         </div>
     )

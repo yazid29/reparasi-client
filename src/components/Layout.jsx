@@ -1,10 +1,13 @@
 import { Outlet } from "react-router-dom";
 import { Toaster } from "sonner";
+
 const Layout = () => {
-  return <>
+  return (
+    <>
       <Outlet />;
       <Toaster />
     </>
+  );
 };
 
 export default Layout;
