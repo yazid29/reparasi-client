@@ -6,8 +6,9 @@ const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:3030",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
-    const bearerToken = getState()?.auth?.accessToken;
-
+    const bearerToken = getState()?.auth?.token;
+    console.log("bearerToken", bearerToken);
+    
     if (bearerToken) {
       headers.set("authorization", `Bearer ${bearerToken}`);
     }
@@ -18,7 +19,8 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithAuth = async (args, api, extraOptions) => {
   let response = await baseQuery(args, api, extraOptions);
-
+  console.log("response baseQueryWithAuth", response);
+  
   if (response?.error?.status === 403) {
     const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
 

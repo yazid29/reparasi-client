@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
-
+import {store} from './store';
 const usersAdapter = createEntityAdapter({});
 
 const initialState = usersAdapter.getInitialState();
@@ -9,7 +9,16 @@ const initialState = usersAdapter.getInitialState();
 const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query({
-      query: () => "/users",
+      // query: () => "/users",
+      query: () => {
+        const token = store.getState().auth.token;
+        return {
+          url: "/users",
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",  // Add Bearer token if it exists
+          },
+        };
+      },
       validateStatus: (response, result) => {
         return response.status === 200 && !result.isError;
       },

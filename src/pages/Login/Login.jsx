@@ -29,6 +29,7 @@ export const Login = () => {
     const onSubmit = async (payload) => {
         try {
             const { accessToken } = await login(payload).unwrap();
+            console.log("accessToken in login.jsx",accessToken);
             toast.info("You are logged in");
             localStorage.setItem("userName", payload.username);
             dispatch(setCredentials({ accessToken }));
