@@ -59,6 +59,16 @@ const usersApiSlice = apiSlice.injectEndpoints({
         body: { id },
       }),
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
+    }),// Menambahkan getUserById
+    getUserById: builder.query({
+      query: (id) => `/users/${id}`,  // Mendapatkan data pengguna berdasarkan ID
+      transformResponse: (responseData) => {
+        responseData.id = responseData._id; // Pastikan field ID konsisten
+        return responseData;
+      },
+      providesTags: (result, error, arg) => [
+        { type: "User", id: arg },  // Memberikan tag untuk user berdasarkan ID
+      ],
     }),
   }),
 });
@@ -68,6 +78,7 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useGetUserByIdQuery,
 } = usersApiSlice;
 
 export const selectUsersResult = usersApiSlice.endpoints.getAllUsers.select();
