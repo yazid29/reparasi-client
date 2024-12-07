@@ -27,7 +27,7 @@ export const UsersList = () => {
     const { ids } = usersData;
     const tableBody =
       ids?.length && ids.map((userId) => <User key={userId} userId={userId} />);
-
+    console.log("tableBody User",tableBody);
     list = (
       <div >
         {/* <h2 className="text-3xl font-semibold">Welcome to the Dashboard</h2>
@@ -37,8 +37,8 @@ export const UsersList = () => {
         <div className="overflow-hidden rounded-lg shadow-sm">
           <div className="mb-8 sm:flex sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Daftar Users</h1>
-              <p>Mengelola akses dan data karyawan</p>
+              <h1 className="text-2xl font-bold text-gray-900">List Users</h1>
+              <p>Managing employee access and data</p>
             </div>
             {/* Sebuah Drawer create User */}
             <CreateUserDrawer />

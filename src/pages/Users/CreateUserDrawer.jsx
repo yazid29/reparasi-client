@@ -44,12 +44,12 @@ export function CreateUserDrawer() {
   return (
     <Sheet>
       <SheetTrigger className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Tambah User
+        Add User
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Buat User Baru</SheetTitle>
-          <SheetDescription>Menambahkan user baru ke db</SheetDescription>
+          <SheetTitle>Create New User</SheetTitle>
+          <SheetDescription>Insert user Information</SheetDescription>
         </SheetHeader>
         <form className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* username */}
