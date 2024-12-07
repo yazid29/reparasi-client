@@ -11,11 +11,7 @@ export const UsersList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetAllUsersQuery("usersList", {
-    // pollingInterval: 60000,
-    refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
-  });
+  } = useGetAllUsersQuery("usersList");
 
   let list;
 

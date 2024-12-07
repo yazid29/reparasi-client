@@ -5,13 +5,12 @@ import {store} from './store';
 const usersAdapter = createEntityAdapter({});
 
 const initialState = usersAdapter.getInitialState();
-
+const token = store.getState().auth.token;
 const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query({
       // query: () => "/users",
       query: () => {
-        const token = store.getState().auth.token;
         return {
           url: "/users",
           headers: {
@@ -48,15 +47,23 @@ const usersApiSlice = apiSlice.injectEndpoints({
         body: {
           ...initialUserData,
         },
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",  // Add Bearer token if it exists
+        },
       }),
       invalidateTags: [{ type: "User", id: "LIST" }],
     }),
     updateUser: builder.mutation({
-      query: ({ newUserData }) => ({
+      query: (newUserData) => (
+        console.log("newUserData",newUserData),
+        {
         url: "/users",
         method: "PATCH",
         body: {
           ...newUserData,
+        },
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",  // Add Bearer token if it exists
         },
       }),
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
@@ -67,6 +74,9 @@ const usersApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
         body: { id },
       }),
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",  // Add Bearer token if it exists
+      },
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
     }),// Menambahkan getUserById
     getUserById: builder.query({
@@ -75,9 +85,13 @@ const usersApiSlice = apiSlice.injectEndpoints({
         responseData.id = responseData._id; // Pastikan field ID konsisten
         return responseData;
       },
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",  // Add Bearer token if it exists
+      },
       providesTags: (result, error, arg) => [
         { type: "User", id: arg },  // Memberikan tag untuk user berdasarkan ID
       ],
+      invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
     }),
   }),
 });
