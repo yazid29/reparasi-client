@@ -37,7 +37,7 @@ export function CreateUserDrawer() {
       toast.info("Successfully updated user");
       refetch();
     } catch (error) {
-      console.error("gagal buat user baru", error);
+      console.error("Failed to create user", error);
     }
   };
 
