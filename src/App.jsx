@@ -31,9 +31,10 @@ export default function App() {
                 <Route index element={<UsersList />} />
               </Route>
             </Route>
-
-            <Route path="tickets">
-              <Route index element={<TicketsList />} />
+            <Route element={<RBAC allowedRoles={["manager", "admin"]} />}>
+              <Route path="tickets">
+                <Route index element={<TicketsList />} />
+              </Route>
             </Route>
           </Route>
         </Route>
