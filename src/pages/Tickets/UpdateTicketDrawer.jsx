@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSchema } from "../../schema/User";
+import { ticketSchema } from "../../schema/Ticket";
 import {
     Sheet,
     SheetContent,

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSchema } from "../../schema/User";
+import { ticketSchema } from "../../schema/Ticket";
 import {
   Sheet,
   SheetContent,
@@ -10,35 +10,39 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ROLES } from "@/config/roles";
-import { useCreateTicketMutation, useGetAllticketsQuery } from "@/api/ticketsApiSlice";
+import { useCreateTicketMutation, useGetAllticketsQuery, useGetAllUsersTicketQuery} from "@/api/ticketsApiSlice";
 import { toast } from "sonner";
 export function CreateTicketDrawer() {
   const { data: tickets, refetch, isLoading: isUsersLoading, isError: isUsersError } = useGetAllticketsQuery();
+  // buatkan untuk getAllUsersTicket
+  const { data: allUsersTicket, isLoading: isAllUsersLoading, isError: isAllUsersError } = useGetAllUsersTicketQuery();
+  // console.log("allUsersTicket", allUsersTicket);
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm({ resolver: zodResolver(userSchema) });
+  } = useForm({ resolver: zodResolver(ticketSchema) });
 
   const [createTicket, { isLoading, isError, isSuccess, error }] =
     useCreateTicketMutation();
 
   const onSubmit = async (payload) => {
-    try {
-      await createTicket({
-        title: payload.title,
-        desc: payload.desc,
-        user: payload.user
-      });
+    console.log("payload", payload);
+    // try {
+    //   await createTicket({
+    //     title: payload.title,
+    //     desc: payload.desc,
+    //     user: payload.user,
+    //   });
 
-      reset();
-      toast.info("Successfully updated Ticket");
-      refetch();
-    } catch (error) {
-      console.error("failed to create Ticket", error);
-    }
+    //   reset();
+    //   toast.info("Successfully updated Ticket");
+    //   refetch();
+    // } catch (error) {
+    //   console.error("failed to create Ticket", error);
+    // }
   };
 
   return (
@@ -73,7 +77,7 @@ export function CreateTicketDrawer() {
             )}
           </div>
 
-          {/* pwd */}
+          {/* desc */}
           <div>
             <label
               className="block text-sm font-medium text-gray-700"
@@ -108,11 +112,11 @@ export function CreateTicketDrawer() {
               className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             >
               <option value="">Pilih User</option>
-              {/* {Object.values(ROLES).map((role) => (
-                <option key={role} value={role}>
-                  {role}
+              {Object.values(allUsersTicket).map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.username}
                 </option>
-              ))} */}
+              ))}
             </select>
           </div>
 

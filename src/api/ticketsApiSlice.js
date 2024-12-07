@@ -95,7 +95,29 @@ const ticketsApiSlice = apiSlice.injectEndpoints({
       ],
       invalidatesTags: (result, error, arg) => [{ type: "Ticket", id: arg.id }],
     }),
+    getAllUsersTicket: builder.query({
+      // query: () => "/users",
+      query: () => {
+        return {
+          url: "/tickets/user",
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",  // Add Bearer token if it exists
+          },
+        };
+      },
+      validateStatus: (response, result) => {
+        return response.status === 200 && !result.isError;
+      },
+      transformResponse: (responseData) => {
+        const loadedUsers = responseData.map((user) => {
+          user.id = user._id;
+          return user;
+        });
+        return loadedUsers;
+      },
+    }),
   }),
+  
 });
 
 export const {
@@ -104,6 +126,7 @@ export const {
   useUpdateTicketMutation,
   useDeleteTicketMutation,
   useGetTicketByIdQuery,
+  useGetAllUsersTicketQuery,
 } = ticketsApiSlice;
 
 export const selectticketsResult = ticketsApiSlice.endpoints.getAlltickets.select();
