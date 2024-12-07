@@ -70,7 +70,8 @@ export function UpdateUserDrawer({ userId, onCloseDrawer }) {
                 roles: [payload.roles],
                 active: payload.active
             }).unwrap();
-            toast.info("Successfully updated user");
+            setIsDrawerOpen(false);
+            toast.info("Successfully Create User");
             // refetch();
             reset();
             // onCloseDrawer();
@@ -79,7 +80,7 @@ export function UpdateUserDrawer({ userId, onCloseDrawer }) {
         }
     };
     return (
-        <Sheet >
+        <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
             <SheetTrigger
                 onClick={() => { setIsDrawerOpen(!isDrawerOpen); }} 
                 className="inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-yellow-600 border border-transparent rounded-md shadow-sm hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"

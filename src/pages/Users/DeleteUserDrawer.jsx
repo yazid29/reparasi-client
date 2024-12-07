@@ -1,128 +1,74 @@
 /* eslint-disable no-unused-vars */
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { userSchema } from "../../schema/User";
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
-import { ROLES } from "@/config/roles";
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import { useDeleteUserMutation } from "@/api/usersApiSlice";
-
-export function DeleteUserDrawer() {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = useForm({ resolver: zodResolver(userSchema) });
-
-    const [createUser, { isLoading, isError, isSuccess, error }] =
-    useDeleteUserMutation();
-
-    const onSubmit = async (payload) => {
+import {useState } from "react";
+import { toast } from "sonner";
+// eslint-disable-next-line react/prop-types
+export function DeleteUserDrawer({ userId, username }) {
+    const [deleteUser, { isLoading, isError, isSuccess, error }] = useDeleteUserMutation();
+    
+    const onDelete = async () => {
+        console.log("delete user id",userId);
         try {
-            await createUser({
-                username: payload.username,
-                password: payload.password,
-                roles: [payload.roles],
-            });
-
-            reset();
+            await deleteUser({id:userId});
+            toast.info("Successfully delete user");
         } catch (error) {
-            console.error("gagal buat user baru", error);
+            console.error("Error deleting user:", error); 
         }
     };
-
+    // State untuk mengontrol status dialog
+    const [isOpen, setIsOpen] = useState(false);
+    // Fungsi untuk membuka dialog
+    const openDialog = () => setIsOpen(true);
+    // Fungsi untuk menutup dialog
+    const closeDialog = () => setIsOpen(false);
     return (
-        <Sheet>
-            <SheetTrigger
-                className="ml-2 inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger 
+                onClick={openDialog}
+                className="ml-2 inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                 <i className="fas fa-trash"></i>
-            </SheetTrigger>
-            <SheetContent>
-                <SheetHeader>
-                    <SheetTitle>Edit User</SheetTitle>
-                    <SheetDescription>Edit Data User ke DB</SheetDescription>
-                </SheetHeader>
-                <form className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-                    {/* username */}
-                    <div>
-                        <label
-                            className="block text-sm font-medium text-gray-700"
-                            htmlFor="username"
-                        >
-                            Username
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            {...register("username", { required: true })}
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        />
-                        {errors.username && (
-                            <p className="mt-1 text-sm text-red-600">
-                                {errors.username.message}
-                            </p>
-                        )}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Delete User</DialogTitle>
+                    <DialogDescription>
+                        Are you sure you want to delete this User?
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <p className="col-span-4 text-center text-sm text-red-600">
+                            Deleting <b>{username}</b>  will permanently remove account.
+                        </p>
                     </div>
-
-                    {/* pwd */}
-                    <div>
-                        <label
-                            className="block text-sm font-medium text-gray-700"
-                            htmlFor="password"
-                        >
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            {...register("password", { required: true })}
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        />
-                        {errors.password && (
-                            <p className="mt-1 text-sm text-red-600">
-                                {errors.password.message}
-                            </p>
-                        )}
-                    </div>
-
-                    {/* roles */}
-                    <div>
-                        <label
-                            className="block text-sm font-medium text-gray-700"
-                            htmlFor="roles"
-                        >
-                            Roles
-                        </label>
-                        <select
-                            id="roles"
-                            {...register("roles")}
-                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                        >
-                            <option value="">Pilih rol</option>
-                            {Object.values(ROLES).map((role) => (
-                                <option key={role} value={role}>
-                                    {role}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
+                </div>
+                <DialogFooter>
                     <button
-                        type="submit"
-                        className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        onClick={onDelete}
+                        type="button"
+                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        disabled={isLoading}
                     >
-                        Submit
+                        {isLoading ? 'Deleting...' : 'Delete'}
                     </button>
-                </form>
-            </SheetContent>
-        </Sheet>
+                    <button
+                        onClick={closeDialog}
+                        type="button"
+                        className="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 ml-2"
+                    >
+                        Cancel
+                    </button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

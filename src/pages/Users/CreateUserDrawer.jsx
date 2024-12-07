@@ -11,9 +11,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ROLES } from "@/config/roles";
-import { useCreateUserMutation } from "@/api/usersApiSlice";
-
+import { useCreateUserMutation, useGetAllUsersQuery } from "@/api/usersApiSlice";
+import { toast } from "sonner";
 export function CreateUserDrawer() {
+  const { data: users, refetch, isLoading: isUsersLoading, isError: isUsersError } = useGetAllUsersQuery();
   const {
     register,
     handleSubmit,
@@ -33,6 +34,8 @@ export function CreateUserDrawer() {
       });
 
       reset();
+      toast.info("Successfully updated user");
+      refetch();
     } catch (error) {
       console.error("gagal buat user baru", error);
     }

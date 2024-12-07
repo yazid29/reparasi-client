@@ -72,7 +72,7 @@ const User = ({ userId, buttonRef, onStatusChange }) => {
       <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
         {/* Edit User Drawer */}
         <UpdateUserDrawer userId={userId} username={username} active={active} roles={roles}/>
-        <DeleteUserDrawer/>
+        <DeleteUserDrawer userId={userId} username={username} />
       </td>
     </tr>
   );
